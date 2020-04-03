@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/incoming_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="6dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginEnd="6dp"
+    android:layout_marginBottom="6dp">
+
+    <ImageView
+        android:id="@+id/incoming_profile_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:elevation="0dp"
+        android:scaleType="fitCenter"
+        android:src="@color/light_green"
+        app:srcCompat="@drawable/roundedbutton" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/incoming_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="98dp"
+        android:alpha="1"
+        android:animateLayoutChanges="false"
+        android:elevation="1dp"
+        app:cardBackgroundColor="@color/cardview_shadow_end_color"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="1dp">
+
+        <LinearLayout
+            android:id="@+id/incoming_msg_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/msg_incoming_bubble"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/t_senders_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_weight="1"
+                    android:text="Saadiq Bhaiya"
+                    android:textAlignment="viewStart"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/t_admin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="1"
+                    android:text="admin"
+                    android:textAlignment="viewEnd"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/t_Message_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="18dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="4dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:text="hi\nHow are you"
+                android:textColor="@color/colorBlack"
+                android:textSize="13.5sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="wrap"
+                app:layout_constraintWidth_percent="0.8" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/t_time_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="18dp"
+                    android:layout_weight="3"
+                    android:text="9:13AM"
+                    android:textAlignment="viewEnd"
+                    android:textSize="10sp" />
+
+                <ImageView
+                    android:id="@+id/i_sent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="6"
+                    android:textAlignment="viewEnd"
+                    app:srcCompat="@drawable/sent_24dp" />
+
+                <ImageView
+                    android:id="@+id/i_received"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="14dp"
+                    android:layout_weight="6"
+                    android:textAlignment="viewEnd"
+                    app:srcCompat="@drawable/recieved_by_all_24dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

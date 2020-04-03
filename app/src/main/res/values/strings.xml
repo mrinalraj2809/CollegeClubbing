@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">CollegeEvent</string>
+    <string name="set_reminder">SET REMINDER</string>
+    <string name="time">TIME</string>
+    <string name="date">DATE</string>
+    <string name="venue">VENUE</string>
+
+    <string name="college_events">COLLEGE EVENTS</string>
+    <string name="group_events">GROUP EVENTS</string>
+    <!--Lokesh-->
+    <!-- TODO: Remove or change this placeholder text -->
+    <!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
+
+    <string name="title_activity_groups">Groups</string>
+    <string name="textview">TextView</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_bottom_navigation">bottom_navigation</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string-array name="user_type">User Type>
+        <item>Select User Type*</item>
+        <item>Student</item>
+        <item>Teacher</item>
+        <item>Admin</item>
+        <item>Super Admin</item>
+    </string-array>
+
+</resources>
