@@ -40,15 +40,15 @@ import java.util.Set;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment_Group extends Fragment implements View.OnClickListener{
-//FloatingActionButton floatingActionButton;
-DatabaseReference dbref,groupref;
-RecyclerView recyclerView,recyclerView1;
-FirebaseRecyclerOptions<Group_List> glist;
-FirebaseRecyclerAdapter<Group_List,Groups_ViewHolder> adapter;
-//ArrayAdapter<String> adapter;
-//ArrayList<Group_List> list_of_groups;
-//Groups_Adapter groups_adapter;
+    public class Fragment_Group extends Fragment implements View.OnClickListener{
+    //FloatingActionButton floatingActionButton;
+    DatabaseReference dbref,groupref;
+    RecyclerView recyclerView,recyclerView1;
+    FirebaseRecyclerOptions<Group_List> glist;
+    FirebaseRecyclerAdapter<Group_List,Groups_ViewHolder> adapter;
+    //ArrayAdapter<String> adapter;
+    //ArrayList<Group_List> list_of_groups;
+    //Groups_Adapter groups_adapter;
     public Fragment_Group() {
         // Required empty public constructor
     }
@@ -58,13 +58,13 @@ FirebaseRecyclerAdapter<Group_List,Groups_ViewHolder> adapter;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_fragment__group, container, false);
+        View view= inflater.inflate(R.layout.fragment_fragment__group, container, false); // since fragments is a view
 //        floatingActionButton= view.findViewById(R.id.create);
 //        floatingActionButton.setOnClickListener(this);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(true); // for 3 dots
         groupref= FirebaseDatabase.getInstance().getReference().child("Groups");
 //        recyclerView= view.findViewById(R.id.recycler);
-        recyclerView1= view.findViewById(R.id.recycler_groups);
+        recyclerView1= view.findViewById(R.id.recycler_groups);  // recycler view from xml
         recyclerView1.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView1.setHasFixedSize(true);
 
@@ -73,7 +73,7 @@ FirebaseRecyclerAdapter<Group_List,Groups_ViewHolder> adapter;
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) { // 3 dots on top
         inflater.inflate(R.menu.menu, menu);
         super.onCreateOptionsMenu(menu,inflater);
     }
@@ -114,6 +114,7 @@ FirebaseRecyclerAdapter<Group_List,Groups_ViewHolder> adapter;
             @NonNull
             @Override
             public Groups_ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                // todo: make changes in group layouts.
                 View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.groups_layout,parent,false);
                 return new Groups_ViewHolder(view);
             }
@@ -125,7 +126,7 @@ FirebaseRecyclerAdapter<Group_List,Groups_ViewHolder> adapter;
         recyclerView1.setAdapter(adapter);
 
     }
-
+    // called from a fn on pressing 3 dots
     private void createGroup() {
         AlertDialog.Builder builder= new AlertDialog.Builder(getContext());
         builder.setTitle("Enter Group Name");

@@ -19,8 +19,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
-    TextInputEditText               txtnmStudent,txtusnStudent,txtpnoStudent,txtsemStudent,txtdepStudent,txtemailStudent,txtpwdStudent,txtcnfpwdStudent;
+    TextInputEditText               txtnmStudent,txtusnStudent,txtpnoStudent,txtemailStudent,txtpwdStudent,txtcnfpwdStudent;
     TextInputEditText               signinnameTeacher,signinUniqueIdTeacher,signinpnoTeacher,signInSpecialisationTeacher,signinbranchTeacher,signinDesignationTeacher,signinemailTeacher,signinpwdTeacher,signinpwdcnfrmTeacher;
+
+    AutoCompleteTextView            acTxtsemStudent,acTxtdepStudent,acTxtSectionStudent;
     Button                          requestPermissionTeacher;
     Button                          requestPermissionAdmin;
     Button                          btnRegisterStudent;
@@ -34,6 +36,9 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
     Spinner spinnerUserType;
     MemberStudent                   memberStudent;
     MemberTeacher                   memberTeacher;
+    String                          departmentArr[] = {"CSE","ISE","MECH","ECE","EEE","TLE","BIO","CHEM","ARCHI"};
+    String                          sectionArr[] = {"A","B","C","D","E","F","G","H","I","J"};
+    String                          semesterArr[] = {"1","2","3","4","5","6","7","8","9","10","11","12"};
 //    MemberAdmin memberAdmin;
 //    MemberSuperAdmin superAdmin
     @Override
@@ -130,27 +135,67 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
         switch (position)
         {
             case 1:// Student
+                ArrayAdapter<String> adapterDepartment = new ArrayAdapter<String>(this,android.R.layout.select_dialog_singlechoice, departmentArr);
+                ArrayAdapter<String> adapterSemester = new ArrayAdapter<String>(this,android.R.layout.select_dialog_singlechoice, semesterArr);
+                ArrayAdapter<String> adapterSection = new ArrayAdapter<String>(this,android.R.layout.select_dialog_singlechoice, sectionArr);
+                //Find TextView control
+
                 txtnmStudent            = findViewById(R.id.signinnameStudent);
                 txtusnStudent           = findViewById(R.id.signinusnStudent);
                 txtpnoStudent           = findViewById(R.id.signinpnoStudent);
-                txtsemStudent           = findViewById(R.id.signinsemStudent);
-                txtdepStudent           = findViewById(R.id.signinbranchStudent);
+                acTxtsemStudent         = (AutoCompleteTextView)findViewById(R.id.signinsemStudent);
+                acTxtdepStudent         = (AutoCompleteTextView)findViewById(R.id.signinbranchStudent);
+                acTxtSectionStudent     = (AutoCompleteTextView)findViewById(R.id.signinSectionStudent);
                 txtemailStudent         = findViewById(R.id.signinemailStudent);
                 txtpwdStudent           = findViewById(R.id.signinpwdStudent);
                 txtcnfpwdStudent        = findViewById(R.id.signinpwdcnfrmStudent);
                 btnRegisterStudent      = findViewById(R.id.signinbtnStudent);
+                //Set the number of characters the user must type before the drop down list is shown
+                acTxtSectionStudent.setThreshold(1);
+                acTxtdepStudent.setThreshold(1);
+                acTxtsemStudent.setThreshold(1);
+                //Set the adapter
+                acTxtdepStudent.setAdapter(adapterDepartment);
+                acTxtsemStudent.setAdapter(adapterSemester);
+                acTxtSectionStudent.setAdapter(adapterSection);
                 btnRegisterStudent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final String name       =txtnmStudent.getText().toString();
+                        final String name       = txtnmStudent.getText().toString();
                         final String usn        = txtusnStudent.getText().toString();
                         final String pno        = txtpnoStudent.getText().toString();
-                        final String sem        = txtsemStudent.getText().toString();
-                        final String branch     = txtdepStudent.getText().toString();
+                        final String sem        = acTxtsemStudent.getText().toString();
+                        final String branch     = acTxtdepStudent.getText().toString();
+                        final String section    = acTxtSectionStudent.getText().toString();
                         final String email      = txtemailStudent.getText().toString();
                         final String pwd        = txtpwdStudent.getText().toString();
                         final String cnfpwd     = txtcnfpwdStudent.getText().toString();
-                        if(!name.isEmpty() && !usn.isEmpty() && !pno.isEmpty() &&
+                        int Deptflag=0;
+                        int Semflag=0;
+                        int Sectionflag=0;
+                        for(String s:departmentArr)
+                        {
+                            if(s.equals(branch)){ Deptflag =1; break;}
+                        }
+                        if(Deptflag == 0){
+                            Toast.makeText(SignUP.this, "Choose Department from the Option!!!", Toast.LENGTH_SHORT).show();
+                        }
+                        for(String s:sectionArr)
+                        {
+                            if(s.equals(section)){Sectionflag =1; break;}
+                        }
+                        if(Sectionflag == 0){
+                            Toast.makeText(SignUP.this, "Choose Section from the Option!!!", Toast.LENGTH_SHORT).show();
+                        }
+                        for(String s:semesterArr)
+                        {
+                            if(s.equals(sem)){Semflag =1; break;}
+                        }
+                        if(Semflag == 0){
+                            Toast.makeText(SignUP.this, "Choose Semester from the Option!!!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        if(!name.isEmpty() && !usn.isEmpty() && !pno.isEmpty() && Sectionflag ==1 && Semflag == 1 && Deptflag == 1 &&
                                 !sem.isEmpty() && !branch.isEmpty() &&
                                 !email.isEmpty() && !pwd.isEmpty() && !cnfpwd.isEmpty() && pwd.equals(cnfpwd)) {
                             if (cnfpwd.equals(pwd)) {
@@ -163,13 +208,28 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
                                                     memberStudent.setStudent_USN(usn);
                                                     memberStudent.setStudent_phone_number(pno);
                                                     memberStudent.setStudent_semester(sem);
+                                                    memberStudent.setStudent_section(section);
                                                     memberStudent.setStudent_branch(branch);
                                                     memberStudent.setStudent_email(email);
                                                     memberStudent.setUser_type("LoginStudent");// login type is student
                                                     //we encrypt and store password
                                                     memberStudent.setStudent_password("1"+pwd+"1");
                                                     memberStudent.setStudent_user_Id(mAuth.getUid());
-                                                    dbref.child("LoginStudent").child(mAuth.getUid()).setValue(memberStudent);
+                                                    dbref.child("LoginStudent").child(mAuth.getUid()).child("profile_info").setValue(memberStudent);
+
+                                                    //Inserting the data into Department, Year, Section
+                                                    //Department Node will help in sending event department wise
+                                                    dbref.child(branch).child(mAuth.getUid()).child("name").setValue(memberStudent.getStudent_name());
+                                                    dbref.child(branch).child(mAuth.getUid()).child("usn").setValue(memberStudent.getStudent_USN());
+                                                    //Semester Node will help in sending event semester wise
+                                                    dbref.child(branch+memberStudent.getStudent_semester()).child(mAuth.getUid()).child("name").setValue(memberStudent.getStudent_name());
+                                                    dbref.child(branch+memberStudent.getStudent_semester()).child(mAuth.getUid()).child("usn").setValue(memberStudent.getStudent_USN());
+                                                    // Section Node will help in sending event section wise
+                                                    dbref.child(branch+memberStudent.getStudent_semester()+memberStudent.getStudent_section()).child(mAuth.getUid()).child("name").setValue(memberStudent.getStudent_name());
+                                                    dbref.child(branch+memberStudent.getStudent_semester()+memberStudent.getStudent_section()).child(mAuth.getUid()).child("usn").setValue(memberStudent.getStudent_USN());
+
+
+
                                                     Toast.makeText(SignUP.this, "Data Inserted Successfully!!!", Toast.LENGTH_SHORT).show();
                                                     startActivity(new Intent(getApplicationContext(), MainActivityLokesh.class));
                                                 } else {
@@ -237,7 +297,7 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
                                                     memberTeacher.setTeacher_user_Id(mAuth.getUid());
                                                     memberTeacher.setTeacher_verified("0");
                                                     //Apply_Permission apply_permission = new Apply_Permission(memberTeacher);apply_permission.memberTeacher=memberTeacher;
-                                                    dbref.child("LoginTeacher").child(mAuth.getUid()).setValue(memberTeacher);
+                                                    dbref.child("LoginTeacher").child(mAuth.getUid()).child("profile_info").setValue(memberTeacher);
                                                     Toast.makeText(SignUP.this, "Registered Successfully!!!\nComplete the Permission Letter", Toast.LENGTH_LONG).show();
                                                     Intent intent = new Intent(getApplicationContext(), Apply_Permission.class);
                                                     intent.putExtra("USER_TYPE","LoginTeacher");
@@ -308,7 +368,7 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
 //                                                    memberTeacher.setTeacher_password("1"+pwdTeacher+"1");
 //                                                    memberTeacher.setTeacher_user_Id(mAuth.getUid());
 //                                                    memberTeacher.setTeacher_verified("0");
-//                                                    dbref.child("LoginTeacher").child(mAuth.getUid()).setValue(memberTeacher);
+//                                                    dbref.child("LoginAdmin").child(mAuth.getUid()).setValue(memberTeacher);
 //                                                    Toast.makeText(SignUP.this, "Registered Successfully!!!\nComplete the Permission Letter", Toast.LENGTH_LONG).show();
 //                                                    Intent intent = new Intent(getApplicationContext(), Apply_Permission.class);
 //                                                    intent.putExtra("USER_TYPE","LoginAdmin");
