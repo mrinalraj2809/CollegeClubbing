@@ -1,4 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/writeup"
+            android:icon="@drawable/writeup"
+            android:contentDescription="Showcase your writing skills and
+             compete for \'Best of the Day\'"
+            android:title="Submit Writing" />
+
+        <item
+            android:id="@+id/notificact"
+            android:icon="@drawable/ic_notifications_black_24dp"
+            android:title="Notifications " />
+
+        <item
+            android:id="@+id/setting"
+            android:icon="@drawable/settings"
+            android:title="Settings" />
+        <item
+            android:id="@+id/about"
+            android:icon="@drawable/about"
+            android:title="About" />
+        <item
+            android:id="@+id/team"
+            android:icon="@drawable/team_icn"
+            android:title="Friends of ScriptInk" />
+
+    </group>
+    <item android:title="Career">
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/campusambass"
+                    android:icon="@drawable/campus_ambass"
+                    android:title="Brand Ambassador " />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Communicate">
+
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/contact"
+                    android:icon="@drawable/contactus"
+                    android:title="Contact Us" />
+
+                <item
+                    android:id="@+id/share"
+                    android:icon="@drawable/sharebtn"
+                    android:title="Share" />
+
+                <item
+                    android:id="@+id/exit"
+                    android:icon="@drawable/exit"
+                    android:title="Exit" />
+            </group>
+        </menu>
+    </item>
 
 </menu>

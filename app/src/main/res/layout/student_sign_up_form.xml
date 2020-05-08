@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 <LinearLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -87,18 +87,47 @@
         android:layout_marginBottom="10dp"
         app:cardCornerRadius="3dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.textfield.TextInputEditText
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+            <AutoCompleteTextView
                 android:id="@+id/signinsemStudent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:hint="Enter Your Semester:"
-                android:inputType="numberDecimal" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:inputType="numberDecimal">
+
+            </AutoCompleteTextView>
+
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/signinsemStudent"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:hint="Enter Your Semester:"-->
+<!--                android:inputType="numberDecimal"/>-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
     </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="3dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/signinSectionStudent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Your Section:"
+            android:inputType="textCapCharacters">
+
+        </AutoCompleteTextView>
+
+    </androidx.cardview.widget.CardView>
+
 
 
     <androidx.cardview.widget.CardView
@@ -110,18 +139,28 @@
         android:layout_marginBottom="10dp"
         app:cardCornerRadius="3dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/signinbranchStudent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Enter Your Branch:"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/signinbranchStudent"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:hint="Enter Your Branch:"-->
+<!--                android:inputType="text" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+        <AutoCompleteTextView
+            android:id="@+id/signinbranchStudent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Your Branch:"
+            android:inputType="textCapCharacters">
+
+        </AutoCompleteTextView>
+
     </androidx.cardview.widget.CardView>
+
 
 
     <androidx.cardview.widget.CardView
@@ -146,6 +185,8 @@
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.cardview.widget.CardView>
 
+
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="70dp"
@@ -165,6 +206,7 @@
                 android:layout_height="match_parent"
                 android:hint="Enter Your Password:"
                 android:inputType="textPassword" />
+
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.cardview.widget.CardView>
 
