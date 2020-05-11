@@ -14,10 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 //import com.google.firebase.auth.FirebaseAuth;
 //import com.google.firebase.auth.FirebaseUser;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHolder> {
     private List<Message_Model>         messageList;
+    FirebaseAuth mAuth;
     //    LinearLayout                        linearLayout;
     //DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("CollegeChatGroup").child("IseDept123456789").child("Chats");
     public static final int MSG_TYPE_LEFT             = -1;
@@ -71,6 +74,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        mAuth = FirebaseAuth.getInstance();
         View itemView;
         if      (viewType == MSG_TYPE_LEFT){
             itemView = LayoutInflater.from(parent.getContext())
@@ -96,25 +100,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
 
 //        if(!message.getDate_changed().equals("0"))
 //            holder.leftJoinDateAdminRemovedText.setText(message.getDate_changed());
-//        else if (!message.getGroup_joined_by().equals("0"))
+//        else if (message.getGroup_joined_by()!= null && !message.getGroup_joined_by().equals("0"))
 //            holder.leftJoinDateAdminRemovedText.setText(message.getGroup_joined_by()+" joined the group");
-//        else if (!message.getGroup_left_by().equals("0"))
+//        else if (message.getGroup_left_by()!= null && !message.getGroup_left_by().equals("0"))
 //            holder.leftJoinDateAdminRemovedText.setText(message.getGroup_left_by()+" left the group");
-//        else if (!(message.getAdmin_name_who_removed_the_participant().equals("0") && message.getAdmin_removed_participant_with_name().equals("0")))
+//        else if (message.getAdmin_name_who_removed_the_participant()!= null && message.getAdmin_removed_participant_with_name()!=null && (!message.getAdmin_name_who_removed_the_participant().equals("0") && !message.getAdmin_removed_participant_with_name().equals("0")))
 //            holder.leftJoinDateAdminRemovedText.setText(message.getAdmin_name_who_removed_the_participant()+" removed "+message.getAdmin_removed_participant_with_name());
-//        else if (!message.getNew_group_admin().equals("0"))
+//        else if (message.getNew_group_admin() != null && !message.getNew_group_admin().equals("0"))
 //            holder.leftJoinDateAdminRemovedText.setText(message.getNew_group_admin()+" is now the admin");
-//        else if (message.getSenders_unique_id().equals( "1"/*firebaseUser.getUid()*/)){
-//            holder.outgoingMsgContent.setText(message.getMesaage_content());
+//        else if (message.getSenders_unique_id()!= null && message.getSenders_unique_id().equals( "1"/*firebaseUser.getUid()*/)){
+//            holder.outgoingMsgContent.setText(message.getMessage_content());
 //            holder.outgoingmsgTime.setText(message.getSent_date_time());
 //        }
-        //else {
+//        else {
             holder.incomingMsgContent.setText(message.getMessage_content());
             holder.incomingmsgTime.setText(message.getSent_date_time());
             holder.sendersName.setText(message.getSenders_name());
             holder.sendersProfileImage.setImageURI(Uri.parse(message.getSenders_profile_pic()));
-        //}
-        //holder.sendersProfileImage.setText(user.getSenders_profile_pic());
+            //}
+            //holder.sendersProfileImage.setText(user.getSenders_profile_pic());
 
 //        linearLayout.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -135,12 +139,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
 //                }
 //            }
 //        });
+//        }
     }
     @Override
     public int getItemViewType(int position) {
        // firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(messageList.get(position).getSenders_unique_id().equals("1"/*firebaseUser.getUid()*/))
+        if(messageList.get(position).getSenders_unique_id().equals(/*mAuth.getUid()*/ "1" /*firebaseUser.getUid()*/))
             return MSG_TYPE_RIGHT;
 //        else if (messageList.get(position).getMesaage_content().equals("0") &&
 //                messageList.get(position).getSenders_unique_id().equals("0") &&

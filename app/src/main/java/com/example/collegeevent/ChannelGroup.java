@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-
+//import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,11 +23,15 @@ public class ChannelGroup extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference mRefChats;
     private ArrayList<Message_Model> message_list;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel_group);
+        mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("College Club");
         recyclerView = findViewById(R.id.chat_recycler_view);
         recyclerView.setHasFixedSize(true);
         firebaseDatabase = FirebaseDatabase.getInstance();

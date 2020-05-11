@@ -25,6 +25,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,6 +47,8 @@ import java.util.Set;
     DatabaseReference dbref,groupref;
     RecyclerView recyclerView,recyclerView1;
     FirebaseRecyclerOptions<Group_List> glist;
+    FirebaseAuth mAuth;
+    FirebaseUser currentUser;
     FirebaseRecyclerAdapter<Group_List,Groups_ViewHolder> adapter;
     //ArrayAdapter<String> adapter;
     //ArrayList<Group_List> list_of_groups;
@@ -52,7 +56,14 @@ import java.util.Set;
     public Fragment_Group() {
         // Required empty public constructor
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(currentUser == null)
+        {
+            startActivity(new Intent(getContext(),LoginActivity.class));
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +73,8 @@ import java.util.Set;
 //        floatingActionButton= view.findViewById(R.id.create);
 //        floatingActionButton.setOnClickListener(this);
         setHasOptionsMenu(true); // for 3 dots
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
         groupref= FirebaseDatabase.getInstance().getReference().child("Groups");
 //        recyclerView= view.findViewById(R.id.recycler);
         recyclerView1= view.findViewById(R.id.recycler_groups);  // recycler view from xml
@@ -77,16 +90,18 @@ import java.util.Set;
         inflater.inflate(R.menu.menu, menu);
         super.onCreateOptionsMenu(menu,inflater);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.create_group:
-//                startActivity(new Intent(getContext(), Apply_Permission.class));
-                createGroup();
-                return true;
-           }
-        return false;
+        super.onOptionsItemSelected(item);
+        switch (item.getItemId())
+        {
+            case R.id.menu_create_group:startActivity(new Intent(getContext(),Profile.class));//createGroup();
+                                        return true;
+            case R.id.menu_logout: mAuth.signOut();
+                                    startActivity(new Intent(getContext(),LoginActivity.class));
+            case R.id.menu_profile_info:return true;
+            default:return false;
+        }
     }
 
 
@@ -103,7 +118,7 @@ import java.util.Set;
                     public void onClick(View v) {
                         switch(i)
                         {
-                            case 1: startActivity(new Intent(getContext(),BottomNavigation.class));
+                            case 1: startActivity(new Intent(getContext(),BackFragment.class));
                             break;
                         }
                     }
@@ -164,12 +179,7 @@ import java.util.Set;
     }
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(adapter!=null)
-            adapter.startListening();
-    }
+
 
     @Override
     public void onStop() {

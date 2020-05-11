@@ -6,26 +6,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".Lokesh.Groups">
-
-
+        tools:context=".Lokesh.HomeActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tool"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+        <include
+            android:id="@+id/main_page_toolbar"
+            layout="@layout/app_bar_layout"/>
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/tool"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
+        <!--     tabMode =  fixed is required so as to completely fill the tab layout   -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabGravity="fill"
-            app:tabMode="scrollable" />
+            app:tabMode="fixed"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     </com.google.android.material.appbar.AppBarLayout>
         <androidx.viewpager.widget.ViewPager

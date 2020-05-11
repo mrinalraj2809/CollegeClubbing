@@ -3,9 +3,9 @@ package com.example.collegeevent.Lokesh;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,36 +18,43 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.core.Tag;
 
-public class MainActivityLokesh extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     Button btn;
     EditText idedittext,pasSedittext;
-    TextView signtext;
+    TextView signtext, forgotPassword;
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    ProgressDialog loadingBar;
+
+    // Redirects user to Home Page if user is already logged in.
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        //FirebaseUser currentUser = mAuth.getCurrentUser();
-        //updateUI(currentUser);
+        if(currentUser != null)
+        {
+            startActivity(new Intent(this,HomeActivity.class));
+        }
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_lokesh);
+        setContentView(R.layout.activity_login);
+        loadingBar = new ProgressDialog(this);
         idedittext=findViewById(R.id.emailid);
         pasSedittext=findViewById(R.id.password);
         signtext= findViewById(R.id.signintext);
         btn= findViewById(R.id.btnLogin);
+        forgotPassword = (TextView)findViewById(R.id.forgotPassword);
         mAuth= FirebaseAuth.getInstance();
+        // to get current user
+        currentUser = mAuth.getCurrentUser();
         signtext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivityLokesh.this,SignUP.class));
+                startActivity(new Intent(LoginActivity.this,SignUP.class));
             }
         });
         btn.setOnClickListener(new View.OnClickListener() {
@@ -57,12 +64,12 @@ public class MainActivityLokesh extends AppCompatActivity {
                 final String pass = pasSedittext.getText().toString();
                 if(uName.equals(""))
                 {
-                    Toast.makeText(MainActivityLokesh.this, "Email ID space is empty!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Email ID space is empty!!!", Toast.LENGTH_SHORT).show();
                     idedittext.requestFocus();
                 }
                 else if(pass.equals(""))
                 {
-                    Toast.makeText(MainActivityLokesh.this, "Password space is empty!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Password space is empty!!!", Toast.LENGTH_SHORT).show();
                     pasSedittext.requestFocus();
                 }
                 else if(uName.equals("reachcclub@gmail.com") && pass.equals("re@chTCCO2020:D"))
@@ -71,16 +78,21 @@ public class MainActivityLokesh extends AppCompatActivity {
                 }
                 else
                 {
+                    loadingBar.setTitle("Logging in");
+                    loadingBar.setMessage("Please wait, while we are verifying the account...");
+                    loadingBar.setCanceledOnTouchOutside(true);
+                    loadingBar.show();
                     mAuth.signInWithEmailAndPassword(uName,pass)
-                            .addOnCompleteListener(MainActivityLokesh.this, new OnCompleteListener<AuthResult>() {
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
-                                        startActivity(new Intent(getApplicationContext(),Groups.class));
+                                        loadingBar.dismiss();
+                                        startActivity(new Intent(getApplicationContext(),HomeActivity.class));
                                         //updateUI(user);
                                     } else {
-
+                                        loadingBar.dismiss();
                                         Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
                                     }
 

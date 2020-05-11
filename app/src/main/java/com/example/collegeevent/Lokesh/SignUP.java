@@ -2,6 +2,7 @@ package com.example.collegeevent.Lokesh;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +23,7 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
     TextInputEditText               txtnmStudent,txtusnStudent,txtpnoStudent,txtemailStudent,txtpwdStudent,txtcnfpwdStudent;
     TextInputEditText               signinnameTeacher,signinUniqueIdTeacher,signinpnoTeacher,signInSpecialisationTeacher,signinbranchTeacher,signinDesignationTeacher,signinemailTeacher,signinpwdTeacher,signinpwdcnfrmTeacher;
 
+    ProgressDialog                  loadingBar;
     AutoCompleteTextView            acTxtsemStudent,acTxtdepStudent,acTxtSectionStudent;
     Button                          requestPermissionTeacher;
     Button                          requestPermissionAdmin;
@@ -46,6 +48,7 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        loadingBar                  = new ProgressDialog(this);
         spinnerUserType             = findViewById(R.id.spinnerUserType);
         stubStudent                 = (ViewStub) findViewById(R.id.layout_stub_student);
         stubTeacher                 = (ViewStub) findViewById(R.id.layout_stub_teacher);
@@ -199,6 +202,10 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
                                 !sem.isEmpty() && !branch.isEmpty() &&
                                 !email.isEmpty() && !pwd.isEmpty() && !cnfpwd.isEmpty() && pwd.equals(cnfpwd)) {
                             if (cnfpwd.equals(pwd)) {
+                                loadingBar.setTitle("Creating new Account");
+                                loadingBar.setMessage("Please wait, while we are creating new account for you...");
+                                loadingBar.setCanceledOnTouchOutside(true);
+                                loadingBar.show();
                                 mAuth.createUserWithEmailAndPassword(email, pwd)
                                         .addOnCompleteListener(SignUP.this, new OnCompleteListener<AuthResult>() {
                                             @Override
@@ -229,11 +236,11 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
                                                     dbref.child(branch+memberStudent.getStudent_semester()+memberStudent.getStudent_section()).child(mAuth.getUid()).child("usn").setValue(memberStudent.getStudent_USN());
 
 
-
+                                                    loadingBar.dismiss();
                                                     Toast.makeText(SignUP.this, "Data Inserted Successfully!!!", Toast.LENGTH_SHORT).show();
-                                                    startActivity(new Intent(getApplicationContext(), MainActivityLokesh.class));
+                                                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                                                 } else {
-
+                                                    loadingBar.dismiss();
                                                     Toast.makeText(SignUP.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
 
                                                 }
@@ -279,6 +286,10 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
                                 !specialisationTeacher.isEmpty() && !branchTeacher.isEmpty() &&
                                 !emailTeacher.isEmpty() && !pwdTeacher.isEmpty() && !cnfpwdTeacher.isEmpty() && !designationTeacher.isEmpty()) {
                             if (cnfpwdTeacher.equals(pwdTeacher)) {
+                                loadingBar.setTitle("Creating new Account");
+                                loadingBar.setMessage("Please wait, while we are creating new account for you...");
+                                loadingBar.setCanceledOnTouchOutside(true);
+                                loadingBar.show();
                                 mAuth.createUserWithEmailAndPassword(emailTeacher, pwdTeacher)
                                         .addOnCompleteListener(SignUP.this, new OnCompleteListener<AuthResult>() {
                                             @Override
@@ -303,9 +314,10 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
                                                     intent.putExtra("USER_TYPE","LoginTeacher");
                                                     intent.putExtra("TEACHER_NAME",nameTeacher);
                                                     intent.putExtra("USER_ID",mAuth.getUid());
+                                                    loadingBar.dismiss();
                                                     startActivity(intent);
                                                 } else {
-
+                                                    loadingBar.dismiss();
                                                     Toast.makeText(SignUP.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
 
                                                 }
@@ -313,6 +325,7 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
                                             }
                                         });
                             } else {
+                                loadingBar.dismiss();
                                 Toast.makeText(SignUP.this, "Password Not Confirmed", Toast.LENGTH_SHORT).show();
                             }
                         }
