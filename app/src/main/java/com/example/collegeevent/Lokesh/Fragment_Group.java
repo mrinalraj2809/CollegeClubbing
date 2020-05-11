@@ -95,11 +95,11 @@ import java.util.Set;
         super.onOptionsItemSelected(item);
         switch (item.getItemId())
         {
-            case R.id.menu_create_group:startActivity(new Intent(getContext(),Profile.class));//createGroup();
+            case R.id.menu_create_group:createGroup();
                                         return true;
             case R.id.menu_logout: mAuth.signOut();
                                     startActivity(new Intent(getContext(),LoginActivity.class));
-            case R.id.menu_profile_info:return true;
+            case R.id.menu_profile_info: startActivity(new Intent(getContext(),Profile.class));
             default:return false;
         }
     }
