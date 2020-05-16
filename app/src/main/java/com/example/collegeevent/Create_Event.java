@@ -2,6 +2,7 @@ package com.example.collegeevent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.collegeevent.Lokesh.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -35,13 +38,24 @@ public class Create_Event extends AppCompatActivity {
     String date = "8022020";  // todo: replace it with the content of the date picker
     int counter = 3;
 
+    FirebaseAuth mAuth;
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(mAuth.getUid() == null)
+        {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create__event);
+        mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        mCollegeReference = firebaseDatabase.getReference("collegeEvent");
-        mGroupReference = firebaseDatabase.getReference("groupEvent");
+        mCollegeReference = firebaseDatabase.getReference("LoginStudent").child(mAuth.getUid()).child("CollegeEvents");
+        mGroupReference = firebaseDatabase.getReference("LoginStudent").child(mAuth.getUid()).child("GroupEvents");
 
         mTitle = (EditText)findViewById(R.id.titleEditText);
         mDescription = (EditText)findViewById(R.id.descriptionEditText);

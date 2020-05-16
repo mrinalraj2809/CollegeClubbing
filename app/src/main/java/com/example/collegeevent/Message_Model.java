@@ -16,6 +16,22 @@ public class Message_Model {
     private String admin_removed_participant_with_name;
 
     public Message_Model() {
+        message_content = "This message is being been fetched!!!";
+        sent_date_time="0";
+        senders_name = "Admin";
+        senders_profile_pic = "https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png";
+        senders_unique_id="0";
+        seen_by = "0";
+
+        date_changed = "0";
+        group_joined_by = "0";
+        group_left_by = "0";
+        new_group_admin = "0";
+
+        admin_name_who_removed_the_participant = "0";
+        admin_removed_participant_with_name = "0";
+
+
     }
 
     public Message_Model(String message_content, String sent_date_time, String senders_name, String senders_profile_pic, String senders_unique_id, String seen_by, String date_changed, String group_joined_by, String group_left_by, String new_group_admin, String admin_name_who_removed_the_participant, String admin_removed_participant_with_name) {

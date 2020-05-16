@@ -15,12 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 //import com.google.firebase.auth.FirebaseUser;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHolder> {
     private List<Message_Model>         messageList;
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
+    private int                  userType;
     //    LinearLayout                        linearLayout;
     //DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("CollegeChatGroup").child("IseDept123456789").child("Chats");
     public static final int MSG_TYPE_LEFT             = -1;
@@ -54,8 +56,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
         public ImageView            sendersProfileImage;
         public TextView             sendersName;
 
+
+
         public MyViewHolder(View view) {
             super(view);
+//            mAuth = FirebaseAuth.getInstance();
+
             outgoingMsgContent              = view.findViewById(R.id.t_Message_out);
             incomingMsgContent              = view.findViewById(R.id.t_Message_in);
             outgoingmsgTime                 = view.findViewById(R.id.t_time_out);
@@ -74,16 +80,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mAuth = FirebaseAuth.getInstance();
+//        mAuth = FirebaseAuth.getInstance();
+        userType = viewType;
+
         View itemView;
         if      (viewType == MSG_TYPE_LEFT){
             itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.incoming_message_layout, parent, false);
         }
-        else if (viewType == MSG_TYPE_CENTER){
-            itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.left_join_date_text_layout, parent, false);
-        }
+//        else if (viewType == MSG_TYPE_CENTER){
+//            itemView = LayoutInflater.from(parent.getContext())
+//                    .inflate(R.layout.left_join_date_text_layout, parent, false);
+//        }
         else {
 
             itemView = LayoutInflater.from(parent.getContext())
@@ -95,6 +103,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
+//        mAuth = FirebaseAuth.getInstance();
+
         Message_Model message = messageList.get(position);
         //this fn puts the data onto the each view holder.
 
@@ -113,13 +123,29 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
 //            holder.outgoingmsgTime.setText(message.getSent_date_time());
 //        }
 //        else {
+        if(userType == MSG_TYPE_LEFT) {
             holder.incomingMsgContent.setText(message.getMessage_content());
             holder.incomingmsgTime.setText(message.getSent_date_time());
             holder.sendersName.setText(message.getSenders_name());
-            holder.sendersProfileImage.setImageURI(Uri.parse(message.getSenders_profile_pic()));
+//            holder.sendersProfileImage.setImageURI(Uri.parse(message.getSenders_profile_pic()));
+            Picasso
+                    .get()
+                    .load(message.getSenders_profile_pic())
+                    .into(holder.sendersProfileImage);
             //}
             //holder.sendersProfileImage.setText(user.getSenders_profile_pic());
-
+        }
+        else if(userType == MSG_TYPE_RIGHT)
+        {
+            holder.outgoingMsgContent.setText(message.getMessage_content());
+            holder.outgoingmsgTime.setText(message.getSent_date_time());
+//            holder.sendersName.setText(message.getSenders_name());
+//            holder.sendersProfileImage.setImageURI(Uri.parse(message.getSenders_profile_pic()));
+//            Picasso
+//                    .get()
+//                    .load(message.getSenders_profile_pic())
+//                    .into(holder.sendersProfileImage);
+        }
 //        linearLayout.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -143,10 +169,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
     }
     @Override
     public int getItemViewType(int position) {
-       // firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+       mAuth = FirebaseAuth.getInstance();
 
-        if(messageList.get(position).getSenders_unique_id().equals(/*mAuth.getUid()*/ "1" /*firebaseUser.getUid()*/))
+        if(messageList.get(position).getSenders_unique_id().equals(mAuth.getUid())){
             return MSG_TYPE_RIGHT;
+        }
+
 //        else if (messageList.get(position).getMesaage_content().equals("0") &&
 //                messageList.get(position).getSenders_unique_id().equals("0") &&
 //                messageList.get(position).getSenders_profile_pic().equals("0") &&

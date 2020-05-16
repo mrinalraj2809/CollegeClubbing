@@ -20,7 +20,6 @@ import java.util.List;
 public class MyAdapter  extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private List<Event_Model>       userList;
     LinearLayout                    linearLayout;
-    DatabaseReference               databaseReference = FirebaseDatabase.getInstance().getReference("collegeEvent");
     int                             flag              = 1;
     public class MyViewHolder extends RecyclerView.ViewHolder {
         //public TextView title, desc;
