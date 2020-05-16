@@ -220,20 +220,35 @@ public class SignUP extends AppCompatActivity implements AdapterView.OnItemSelec
                                                     memberStudent.setStudent_email(email);
                                                     memberStudent.setUser_type("LoginStudent");// login type is student
                                                     //we encrypt and store password
-                                                    memberStudent.setStudent_password("1"+pwd+"1");
+                                                    memberStudent.setStudent_password(""+pwd);
                                                     memberStudent.setStudent_user_Id(mAuth.getUid());
+                                                    long time = System.currentTimeMillis();
+                                                    long dept = time +1;
+                                                    long deptSem = time +2;
+                                                    long deptSemSec = time +3;
+                                                    // fills all the colleges groups into the users' node while signup.
+                                                    // todo : apply check condition on getting group key.
                                                     dbref.child("LoginStudent").child(mAuth.getUid()).child("profile_info").setValue(memberStudent);
+                                                    dbref.child("LoginStudent").child(mAuth.getUid()).child("CollegeGroups").child(""+dept).child("key").setValue(String.valueOf(dept));
+                                                    dbref.child("LoginStudent").child(mAuth.getUid()).child("CollegeGroups").child(""+dept).child("name").setValue(memberStudent.getStudent_branch());
+                                                    dbref.child("LoginStudent").child(mAuth.getUid()).child("CollegeGroups").child(""+deptSem).child("key").setValue(""+deptSem);
+                                                    dbref.child("LoginStudent").child(mAuth.getUid()).child("CollegeGroups").child(""+deptSem).child("name").setValue(memberStudent.getStudent_branch()+memberStudent.getStudent_semester());
+                                                    dbref.child("LoginStudent").child(mAuth.getUid()).child("CollegeGroups").child(""+deptSemSec).child("key").setValue(""+deptSemSec);
+                                                    dbref.child("LoginStudent").child(mAuth.getUid()).child("CollegeGroups").child(""+deptSemSec).child("name").setValue(memberStudent.getStudent_branch()+memberStudent.getStudent_semester()+memberStudent.getStudent_section());
 
                                                     //Inserting the data into Department, Year, Section
                                                     //Department Node will help in sending event department wise
-                                                    dbref.child(branch).child(mAuth.getUid()).child("name").setValue(memberStudent.getStudent_name());
-                                                    dbref.child(branch).child(mAuth.getUid()).child("usn").setValue(memberStudent.getStudent_USN());
+                                                    dbref.child(branch).child("Info").child("GroupKey").setValue(""+dept);
+                                                    dbref.child(branch).child("Users").child(mAuth.getUid()).child("name").setValue(memberStudent.getStudent_name());
+                                                    dbref.child(branch).child("Users").child(mAuth.getUid()).child("usn").setValue(memberStudent.getStudent_USN());
                                                     //Semester Node will help in sending event semester wise
-                                                    dbref.child(branch+memberStudent.getStudent_semester()).child(mAuth.getUid()).child("name").setValue(memberStudent.getStudent_name());
-                                                    dbref.child(branch+memberStudent.getStudent_semester()).child(mAuth.getUid()).child("usn").setValue(memberStudent.getStudent_USN());
+                                                    dbref.child(branch+memberStudent.getStudent_semester()).child("Info").child("GroupKey").setValue(""+deptSem);
+                                                    dbref.child(branch+memberStudent.getStudent_semester()).child("Users").child(mAuth.getUid()).child("name").setValue(memberStudent.getStudent_name());
+                                                    dbref.child(branch+memberStudent.getStudent_semester()).child("Users").child(mAuth.getUid()).child("usn").setValue(memberStudent.getStudent_USN());
                                                     // Section Node will help in sending event section wise
-                                                    dbref.child(branch+memberStudent.getStudent_semester()+memberStudent.getStudent_section()).child(mAuth.getUid()).child("name").setValue(memberStudent.getStudent_name());
-                                                    dbref.child(branch+memberStudent.getStudent_semester()+memberStudent.getStudent_section()).child(mAuth.getUid()).child("usn").setValue(memberStudent.getStudent_USN());
+                                                    dbref.child(branch+memberStudent.getStudent_semester()+memberStudent.getStudent_section()).child("Info").child("GroupKey").setValue(""+deptSemSec);
+                                                    dbref.child(branch+memberStudent.getStudent_semester()+memberStudent.getStudent_section()).child("Users").child(mAuth.getUid()).child("name").setValue(memberStudent.getStudent_name());
+                                                    dbref.child(branch+memberStudent.getStudent_semester()+memberStudent.getStudent_section()).child("Users").child(mAuth.getUid()).child("usn").setValue(memberStudent.getStudent_USN());
 
 
                                                     loadingBar.dismiss();

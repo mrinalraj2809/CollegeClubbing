@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,10 +16,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 import android.view.ViewGroup;
 
+import com.example.collegeevent.MyAdapter;
 import com.example.collegeevent.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter_LifecycleAdapter;
@@ -44,12 +48,17 @@ import java.util.Set;
  */
     public class Fragment_Group extends Fragment implements View.OnClickListener{
     //FloatingActionButton floatingActionButton;
-    DatabaseReference dbref,groupref;
-    RecyclerView recyclerView,recyclerView1;
-    FirebaseRecyclerOptions<Group_List> glist;
+    DatabaseReference dbref;
+    DatabaseReference collegeChatRef;
+    DatabaseReference groupChatRef;
+    public RecyclerView mRecyclerViewCollegeChat;
+    RecyclerView mRecyclerViewGroupChat;
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
-    FirebaseRecyclerAdapter<Group_List,Groups_ViewHolder> adapter;
+
+    ArrayList<Group_List> college_groups_lists;
+    ArrayList<Group_List> subscribed_groups_lists;
+
     //ArrayAdapter<String> adapter;
     //ArrayList<Group_List> list_of_groups;
     //Groups_Adapter groups_adapter;
@@ -70,21 +79,82 @@ import java.util.Set;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_fragment__group, container, false); // since fragments is a view
-//        floatingActionButton= view.findViewById(R.id.create);
-//        floatingActionButton.setOnClickListener(this);
         setHasOptionsMenu(true); // for 3 dots
+        dbref = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        groupref= FirebaseDatabase.getInstance().getReference().child("Groups");
-//        recyclerView= view.findViewById(R.id.recycler);
-        recyclerView1= view.findViewById(R.id.recycler_groups);  // recycler view from xml
-        recyclerView1.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView1.setHasFixedSize(true);
-
-        retrieve_groups();
+        collegeChatRef = FirebaseDatabase.getInstance().getReference().child("LoginStudent").child(mAuth.getUid()).child("CollegeGroups");
+        groupChatRef = FirebaseDatabase.getInstance().getReference().child("LoginStudent").child(mAuth.getUid()).child("SubscribedGroups");
+        mRecyclerViewCollegeChat = view.findViewById(R.id.recycler_college_groups);  // recycler view from xml
+        mRecyclerViewGroupChat = view.findViewById(R.id.recycler_subscribed_group);
+        retrieve_college_groups();
+        retrieve_subscribed_groups();
         return view;
     }
+    private void retrieve_college_groups() {
+        mRecyclerViewCollegeChat.clearOnScrollListeners();
+        mRecyclerViewCollegeChat.clearOnChildAttachStateChangeListeners();
+        college_groups_lists = new ArrayList<Group_List>();
+        collegeChatRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Group_List group_list;
+                college_groups_lists.clear();
+                for (DataSnapshot x: dataSnapshot.getChildren())
+                {
+                    group_list = x.getValue(Group_List.class);
+                    college_groups_lists.add(group_list);
+                }
+                mRecyclerViewCollegeChat.clearOnScrollListeners();
+                mRecyclerViewCollegeChat.clearOnChildAttachStateChangeListeners();
 
+                //This sets the all data from the firebase onto the adapter
+                Groups_Adapter myGroupAdapter= new Groups_Adapter(getContext(),college_groups_lists);
+                //myGroupAdapter.imageGroupIcon.setImageResource(R.drawable.official);
+                RecyclerView.LayoutManager recyce = new GridLayoutManager(mRecyclerViewCollegeChat.getContext(),1);
+                mRecyclerViewCollegeChat.setLayoutManager(recyce);
+                mRecyclerViewCollegeChat.setItemAnimator(new DefaultItemAnimator());
+                mRecyclerViewCollegeChat.setAdapter(myGroupAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void retrieve_subscribed_groups() {
+        //mRecyclerViewGroupChat.clearOnScrollListeners();
+        //mRecyclerViewGroupChat.clearOnChildAttachStateChangeListeners();
+        subscribed_groups_lists = new ArrayList<Group_List>();
+        groupChatRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Group_List group_list;
+                subscribed_groups_lists.clear();
+                for (DataSnapshot x : dataSnapshot.getChildren()) {
+                    group_list = x.getValue(Group_List.class);
+                    subscribed_groups_lists.add(group_list);
+                }
+                mRecyclerViewGroupChat.clearOnScrollListeners();
+                mRecyclerViewGroupChat.clearOnChildAttachStateChangeListeners();
+
+                //This sets the all data from the firebase onto the adapter
+
+                Groups_Adapter myGroupAdapter = new Groups_Adapter(getContext(), subscribed_groups_lists);
+                //myGroupAdapter.imageGroupIcon.setImageResource(R.drawable.public_group);
+                RecyclerView.LayoutManager recyce = new GridLayoutManager(mRecyclerViewGroupChat.getContext(), 1);
+                mRecyclerViewGroupChat.setLayoutManager(recyce);
+                mRecyclerViewGroupChat.setItemAnimator(new DefaultItemAnimator());
+                mRecyclerViewGroupChat.setAdapter(myGroupAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) { // 3 dots on top
         inflater.inflate(R.menu.menu, menu);
@@ -95,7 +165,8 @@ import java.util.Set;
         super.onOptionsItemSelected(item);
         switch (item.getItemId())
         {
-            case R.id.menu_create_group:createGroup();
+            case R.id.menu_create_group://if(mAuth.getUid() == LoginAdmin)
+                                        createGroup();
                                         return true;
             case R.id.menu_logout: mAuth.signOut();
                                     startActivity(new Intent(getContext(),LoginActivity.class));
@@ -104,43 +175,6 @@ import java.util.Set;
         }
     }
 
-
-
-    private void retrieve_groups() {
-        glist= new FirebaseRecyclerOptions.Builder<Group_List>()
-                .setQuery(groupref,Group_List.class).build();
-        adapter= new FirebaseRecyclerAdapter<Group_List, Groups_ViewHolder>(glist) {
-            @Override
-            protected void onBindViewHolder(@NonNull Groups_ViewHolder groups_viewHolder, final  int i, @NonNull Group_List group_list) {
-                groups_viewHolder.txtgroup.setText(group_list.getName());
-                groups_viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        switch(i)
-                        {
-                            case 1: startActivity(new Intent(getContext(),BackFragment.class));
-                            break;
-                        }
-                    }
-                });
-
-            }
-
-            @NonNull
-            @Override
-            public Groups_ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                // todo: make changes in group layouts.
-                View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.groups_layout,parent,false);
-                return new Groups_ViewHolder(view);
-            }
-
-
-        };
-
-        adapter.startListening();
-        recyclerView1.setAdapter(adapter);
-
-    }
     // called from a fn on pressing 3 dots
     private void createGroup() {
         AlertDialog.Builder builder= new AlertDialog.Builder(getContext());
@@ -160,6 +194,7 @@ import java.util.Set;
     }
 
     private void CreateNewGroup(final String groupname) {
+
         dbref.child("Groups").child(groupname).setValue("")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -179,19 +214,4 @@ import java.util.Set;
     }
 
 
-
-
-    @Override
-    public void onStop() {
-        if(adapter!=null)
-            adapter.stopListening();
-        super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(adapter!=null)
-            adapter.startListening();
-    }
 }
